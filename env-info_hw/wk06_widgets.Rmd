@@ -5,13 +5,7 @@ date: "February 12, 2016"
 output: html_document
 ---
 
-#Interactive Visualization
-
-For the individual assignment, similar to last week, you'll find it easiest to copy and paste from `## interactive visualization` onwards in  [`env-info/wk06_widgets.Rmd`](https://raw.githubusercontent.com/ucsb-bren/env-info/gh-pages/wk06_widgets.Rmd) to your `env-info_hw/wk06_widgets.Rmd` inside your `<user>.github.io` repo. These files must be named _exactly_ as expected, otherwise we won't be able to find it and give you credit. You can then play with different chunks of the code. Be sure to answer all **Tasks** in your document - this is your individual assignment!
-  
-  ### setup
-  
-  Ensure that you're in the same working directory `env-info_hw` when you Knit HTML as when you test code in the Console.
+Ensure that you're in the same working directory `env-info_hw` when you Knit HTML as when you test code in the Console.
 
 ```{r setwd env-info_hw, eval=FALSE}
 wd = 'env-info_hw'
@@ -32,7 +26,7 @@ stop(sprintf("WHOAH! Your working directory is not in '%s'!\n   getwd(): %s", wd
 
 ### principles
 
-Interactive visualization has been a mainstay of R since the beginning, but historically referred to as [exploratory data analysis](https://en.wikipedia.org/wiki/Exploratory_data_analysis). The majority of innovation with interactive visualization has been happening with web technologies (HTML, CSS, JS, SVG). Although we're not going full Minority Report (although I'm sure someone has hooked up Oculus Rift to R), we should have fun with trying out these visualizations.
+Interactive visualization has been a mainstay of R since the beginning, but historically referred to as [exploratory data analysis](https://en.wikipedia.org/wiki/Exploratory_data_analysis). The majority of innovation with interactive visualization has been happening with web technologies (HTML, CSS, JS, SVG). We're not as futuristic yet as Minority Report (although I'm sure someone has hooked up Oculus Rift to R), we should have fun with trying out these visualizations.
 
 ![](wk06_widgets/img/minority-report_data-wave.jpg)
 
@@ -105,12 +99,12 @@ ggtitle('geyser eruption duration')
 }, a = slider(min = 0, max = 2, initial = 1, label = 'bandwidth adjustment', step = 0.2))
 ```
 
-You should see the slider popout of a gear icon in the upper left of your Plots pane in RStudio.
+You should see the slider popout of a gear icon in th upper left of your Plots pane in RStudio.
 
 ![](wk06_widgets/img/manipulate_gear.png)
 
 **Task.** Add another R chunk with a slider adjusting the number of bins from 5 to 50, with step increments of 5.
-```{r manipulate, eval=F}
+```{r manipulate.task, eval=F}
 library(manipulate) # install.packages('manipulate')
 
 manipulate({
@@ -125,7 +119,6 @@ ggtitle('Geyser Eruption Duration')
 
 }, b = slider(min = 5, max = 50, label = 'bandwidth adjustment', step = 5))
 ```
-
 ### `ggvis`
 
 You can do something similar with [ggvis](http://ggvis.rstudio.com/0.1/quick-examples.html).
@@ -146,26 +139,25 @@ The ggvis is slotted to become the feature-rich interactive version of the ggplo
 
 Let's use ggvis `tooltip()` to show values of a scatterplot on mouse hover.
 
-
 ```{r ggvis add_tooltip, eval=FALSE}
 cars = mtcars %>%
-  add_rownames('model') %>%        # dplyr drops rownames
-  mutate(id = row_number()) # add an id column to use ask the key
+add_rownames('model') %>%        # dplyr drops rownames
+mutate(id = row_number()) # add an id column to use ask the key
 
 all_values <- function(x) {
-  if(is.null(x)) return(NULL)
-  row <- cars[cars$id == x$id, ]
-  paste0(names(row), ": ", format(row), collapse = "<br/>")
+if(is.null(x)) return(NULL)
+row <- cars[cars$id == x$id, ]
+paste0(names(row), ": ", format(row), collapse = "<br/>")
 }
 
 cars %>% 
-  ggvis(x = ~wt, y = ~mpg, key := ~id) %>%
-  layer_points() %>%
-  add_tooltip(all_values, 'hover')
+ggvis(x = ~wt, y = ~mpg, key := ~id) %>%
+layer_points() %>%
+add_tooltip(all_values, 'hover')
 ```
 
 **Task.** Add another R chunk that only applies the `add_tooltip` on mouse click.
-```{r ggvis add_tooltip, eval=FALSE}
+```{r ggvis add_tooltip.task, eval=FALSE}
 cars.task = mtcars %>%
   add_rownames('model') %>%        # dplyr drops rownames
   mutate(id = row_number()) # add an id column to use ask the key
@@ -181,6 +173,7 @@ cars.task %>%
   layer_points(fill = 'green') %>%
   add_tooltip(all_values, 'click')
 ```
+
 ## htmlwidgets
 
 [HTMLwidgets](http://www.htmlwidgets.org) is a framework for connecting JavaScript libraries with R in 3 modes:
@@ -239,7 +232,7 @@ datatable(iris, options = list(dom = 'tp'))
 Note how the [`dom` option](http://datatables.net/reference/option/dom) removed other elements from display such as the Show (`l`ength), Search (`f`iltering) and Showing (`i`nformation) elements from the default, but kept the `t`able and `p`agination control.
 
 **Task.** Output the table again with `datatable` and set the `options` to have `pagelength` of just 5 rows. (See `?datatable` and <http://rstudio.github.io/DT/>).
-```{r datatable}
+```{r datatable.task}
 library(DT) # install.packages('DT')
 
 # default datatable
@@ -579,12 +572,12 @@ streamgraph examples:
   
   ### `wordcloud`
   
-```{r wordcloud}
+  ```{r wordcloud}
   library("d3wordcloud") # devtools::install_github("jbkunst/d3wordcloud")
   words <- c("I", "love", "this", "package", "but", "I", "don't", "like", "use", "wordclouds")
   freqs <- sample(seq(length(words)))
   d3wordcloud(words, freqs)
-```
+  ```
   
   ## resources
   
@@ -632,5 +625,4 @@ streamgraph examples:
                                            ### talks
                                            
                                            - [Hans Rosling](http://www.ted.com/speakers/hans_rosling): [The best stats you've ever seen | TED.com](http://www.ted.com/talks/hans_rosling_shows_the_best_stats_you_ve_ever_seen), [Gapminder World](http://www.gapminder.org/world/#$majorMode=chart$is;shi=t;ly=2003;lb=f;il=t;fs=11;al=30;stl=t;st=t;nsl=t;se=t$wst;tts=C$ts;sp=5.59290322580644;ti=2013$zpv;v=0$inc_x;mmid=XCOORDS;iid=phAwcNAVuyj1jiMAkmq1iMg;by=ind$inc_y;mmid=YCOORDS;iid=phAwcNAVuyj2tPLxKvvnNPA;by=ind$inc_s;uniValue=8.21;iid=phAwcNAVuyj0XOoBL_n5tAQ;by=ind$inc_c;uniValue=255;gid=CATID0;by=grp$map_x;scale=log;dataMin=194;dataMax=96846$map_y;scale=lin;dataMin=23;dataMax=86$map_s;sma=49;smi=2.65$cd;bd=0$inds=;example=75)
-                                                                                                        
-                                                                                                        - [David McCandless: The beauty of data visualization | TED.com](http://www.ted.com/talks/david_mccandless_the_beauty_of_data_visualization?language=en)
+                                                                                                                                                                                                        - [David McCandless: The beauty of data visualization | TED.com](http://www.ted.com/talks/david_mccandless_the_beauty_of_data_visualization?language=en)
