@@ -2,7 +2,9 @@
 title: "wk_06"
 author: "Stephanie Griffin"
 date: "February 12, 2016"
-output: html_document
+output: 
+  html_document:
+    self_contained: no
 ---
 
 Ensure that you're in the same working directory `env-info_hw` when you Knit HTML as when you test code in the Console.
