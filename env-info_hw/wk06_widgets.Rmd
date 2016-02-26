@@ -7,6 +7,8 @@ output:
     self_contained: no
 ---
 
+del "C:/Users/Stephanie/Documents/ESM 296/git/sgriff.github.io/.git/index.lock"
+
 Ensure that you're in the same working directory `env-info_hw` when you Knit HTML as when you test code in the Console.
 
 ```{r setwd env-info_hw, eval=FALSE}
