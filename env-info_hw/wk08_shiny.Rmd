@@ -6,13 +6,13 @@ output: html_document
 runtime: shiny
 ---
 
- 
 
 ## Embedded Application
 
 It's also possible to embed an entire Shiny application within an R Markdown document using the `shinyAppDir` function. This example embeds a Shiny application located in another directory:
 
-```{r Intro to Shiny app, echo=FALSE}
+```{r Intro to Shiny app, echo = F, eval=FALSE}
+library(shiny)
 shinyAppDir(
   system.file("examples/06_tabsets", package="shiny"),
   options=list(
@@ -21,8 +21,16 @@ shinyAppDir(
 )
 ```
 
-```{r, Individual Assignment, eval = F}
+##Homework Assignment: Week 8
+```{r Individual Assignment, eval = F, echo=F}
 #ui.R
+library(shiny)
+
+counties = readRDS('counties.rds')
+library(maps)
+library(mapproj)
+
+# ui.R
 
 shinyUI(fluidPage(
   titlePanel("censusVis"),
@@ -30,20 +38,54 @@ shinyUI(fluidPage(
   sidebarLayout(
     sidebarPanel(
       helpText("Create demographic maps with 
-               information from the 2010 US Census."),
-      
-      selectInput("var", 
-                  label = "Choose a variable to display",
-                  choices = list("Percent White", "Percent Black",
-                                 "Percent Hispanic", "Percent Asian"),
-                  selected = "Percent White"),
-      
-      sliderInput("range", 
-                  label = "Range of interest:",
-                  min = 0, max = 100, value = c(0, 100))
-      ),
+        information from the 2010 US Census."),
     
-    mainPanel()
+      selectInput("var", 
+        label = "Choose a variable to display",
+        choices = c("Percent White", "Percent Black",
+          "Percent Hispanic", "Percent Asian"),
+        selected = "Percent White"),
+    
+      sliderInput("range", 
+        label = "Range of interest:",
+        min = 0, max = 100, value = c(0, 100))
+    ),
+  
+    mainPanel(plotOutput("map"))
   )
 ))
+
+# server.R
+
+shinyServer(
+  function(input, output) {
+
+    output$map <- renderPlot({ 
+      data <- switch(input$var, 
+        "Percent White" = counties$white,
+        "Percent Black" = counties$black,
+        "Percent Hispanic" = counties$hispanic,
+        "Percent Asian" = counties$asian)
+    
+     color <- switch(input$var, 
+        "Percent White" = "green",
+        "Percent Black" = "black",
+        "Percent Hispanic" = "darkorange",
+        "Percent Asian" = "darkviolet")
+    
+      legend <- switch(input$var, 
+        "Percent White" = "% White",
+        "Percent Black" = "% Black",
+        "Percent Hispanic" = "% Hispanic",
+        "Percent Asian" = "% Asian")
+      
+      percent_map(var = data, 
+        color = color, 
+        legend.title = legend, 
+        max = input$range[2], 
+        min = input$range[1])
+    })
+    }
+)
+shinyApp(ui, server)
 ```
